@@ -18,7 +18,7 @@ constants.N0=[0,0,0]'; constants.N0(dir)=1;
 constants.NSHR=3;
 constants.nu=0.4; % Poisson's Ratio
 
-d = linspace(0,0.3,50);
+d = linspace(0,1,50);
 
 %%
 
@@ -75,9 +75,11 @@ maxcheck=200;
 
 % Boundary Conditions
 
-bnd_node = vertcat(msh.x1,msh.y1,msh.z1,msh.l_face);
-bnd_dof = vertcat(ones(length(msh.x1) ,1) ,2*ones(length(msh.y1) ,1) ,3*ones(length(msh.z1) ,1), dir*ones(length(msh.l_face) ,1));
+% bnd_node = vertcat(msh.x1,msh.y1,msh.z1,msh.l_face);
+% bnd_dof = vertcat(ones(length(msh.x1) ,1) ,2*ones(length(msh.y1) ,1) ,3*ones(length(msh.z1) ,1), dir*ones(length(msh.l_face) ,1));
 
+bnd_node = vertcat(msh.f_face,msh.f_face,msh.f_face,msh.l_face);
+bnd_dof = vertcat(ones(length(msh.f_face) ,1) ,2*ones(length(msh.f_face) ,1) ,3*ones(length(msh.f_face) ,1), dir*ones(length(msh.l_face) ,1));
 
 
 
@@ -190,26 +192,26 @@ ApplyBound = @(u,K)Boundary(u,K,bnd_node,bnd_dof,bnd_val,msh);
     
     
     %%
-   
-    figure(8)
-    hold on
+%    
+%     figure(8)
+%     hold on
+% 
+%     xlabel('Displacement')
+%     ylabel('Force')
+%     plot(d(i),f(55),'ob');%bottom face
+%     plot(d(i),f(71),'og');%midplane
+%     plot(d(i),f(59),'or');%top face
+%     plot(d(i),f(80),'ok');%midpoint top
+%     legend({'Bottom Corner','Midplane Corner','Top Corner','Top Midpoint'},'Location','southwest')
+%     
 
-    xlabel('Displacement')
-    ylabel('Force')
-    plot(d(i),f(55),'ob');%bottom face
-    plot(d(i),f(71),'og');%midplane
-    plot(d(i),f(80),'ok');%midpoint top
-    plot(d(i),f(59),'or');%top face
-%     legend({'Bottom, K','Top, K','Bottom, dfdu','Top, dfdu'},'Location','northwest')
-    
-
-    
-    msh.connectivity = msh.e2g(:,1:8);
-    
-    vector.name = 'Displacements';
-    vector.data=u;
-    
-    matlab2vtk (strcat('Results/','Nonlinfibre_a_', date, '_', int2str(i),'.vtk'),'NonLinear', msh, 'hex',[], vector, [],length(msh.coords(1,:)));
+%     
+%     msh.connectivity = msh.e2g(:,1:8);
+%     
+%     vector.name = 'Displacements';
+%     vector.data=u;
+%     
+%     matlab2vtk (strcat('Results/','Nonlinfibre_a_', date, '_', int2str(i),'.vtk'),'NonLinear', msh, 'hex',[], vector, [],length(msh.coords(1,:)));
     
 end
 
