@@ -30,8 +30,8 @@ d = linspace(0,0.2,50);
 %% Set Up Mesh %%
 
 
-filename = 'hexa_cube_2x2.msh';
-% filename = 'singleElement.msh';
+% filename = 'hexa_cube_2x2.msh';
+filename = 'singleElement.msh';
 
 msh = readMesh(filename,'HEXAS');
 
@@ -138,7 +138,8 @@ for i = 1 : length(d)
         r2=r1;
         r1=r;
 
-        
+
+
         %% Stiffness Matrix %%
         
         
@@ -168,7 +169,7 @@ for i = 1 : length(d)
         
     end
     
-    %% Find Force %%
+            %% Find Force %%
     
             f = zeros(3*msh.nnode,1);
         
@@ -236,10 +237,16 @@ for i = 1 : length(d)
             dfdu(k,j)=(f_eps(k,j)-f(k))/eps;
         end
     end
-
+    
     Ktemp=FindK(u0);
     
     diff=Ktemp-dfdu;
+    
+    %%
+    
+  
+    
+    
     
     figure(2)
     hold on
@@ -254,24 +261,26 @@ for i = 1 : length(d)
     
     xlabel('Displacement')
     ylabel('Norm Values')
-    plot(d(i),norm(diff),'*g');
+%     plot(d(i),norm(diff),'*g');
     plot(d(i),norm(dfdu),'*r');
     plot(d(i),norm(full(Ktemp)),'*b');
+        plot(d(i),max(max(abs(dfdu))),'or');
+    plot(d(i),max(max(abs(Ktemp))),'ob');
 
     
     
-    fileID = fopen('Results/dfdu.txt','a');
-    fprintf(fileID,'\r\nLoop %3d \r\n\r\n',i);
-    
-    fprintf(fileID,'\r\nMax Force %3d \r\n\r\n',max(max(abs(f))));
-    
-    fprintf(fileID,'\r\nMax F Epsilon %3d \r\n\r\n',max(max(abs(f_eps))));
-    
-    fprintf(fileID,'\r\nMax Difference in K %3d \r\n\r\n',max(max(diff)));
-    
-    fprintf(fileID,'\r\n\r\n');
-    
-    fclose(fileID);
+%     fileID = fopen('Results/dfdu.txt','a');
+%     fprintf(fileID,'\r\nLoop %3d \r\n\r\n',i);
+%     
+%     fprintf(fileID,'\r\nMax Force %3d \r\n\r\n',max(max(abs(f))));
+%     
+%     fprintf(fileID,'\r\nMax F Epsilon %3d \r\n\r\n',max(max(abs(f_eps))));
+%     
+%     fprintf(fileID,'\r\nMax Difference in K %3d \r\n\r\n',max(max(diff)));
+%     
+%     fprintf(fileID,'\r\n\r\n');
+%     
+%     fclose(fileID);
     
     %% Reshape u %%
     
@@ -294,12 +303,12 @@ for i = 1 : length(d)
     %
     
     %
-    %     msh.connectivity = msh.e2g(:,1:8);
-    %
-    %     vector.name = 'Displacements';
-    %     vector.data=u;
-    %
-    %     matlab2vtk (strcat('Results/','Nonlinfibre_a_', date, '_', int2str(i),'.vtk'),'NonLinear', msh, 'hex',[], vector, [],length(msh.coords(1,:)));
+        msh.connectivity = msh.e2g(:,1:8);
+    
+        vector.name = 'Displacements';
+        vector.data=u;
+    
+        matlab2vtk (strcat('Results/','Nonlinfibre_a_', date, '_', int2str(i),'.vtk'),'NonLinear', msh, 'hex',[], vector, [],length(msh.coords(1,:)));
     
 end
 
